@@ -196,6 +196,58 @@ TODO
   [figure of pipelines] - say we are working on the surface pipelines
 \end{draft}
 
+The present decade is living a stratospheric investment of efforts from the wider community in technology ecosystems for modeling 3D phenomena using multiple images acquired by a camera in different positions, multiple cameras, or video~\cite{AppleKeynote:2018}. % A Expand here on explicit applications and citations
+% - mention concrete appso ok
+% - mention hot techs that have been developed, then link to next sentence
+This unprecedented escalating impact of 3D vision is largely due to structure from motion pipelines devised in the past decade providing new tools to solve key problems in a robust and automatic manner. 
+% B detail tools very very briefly
+However, the vast potential of 3D technology remains largely unexplored, partly
+due to a gold rush to capitalize on applications immediately made possible with
+these tools, and partly due to evident limitations of the technology uncovered
+in the process~\cite{AppleKeynote:2018}. 
+We claim these limitations are largely rooted in three core issues to be
+addressed in this research: the naive use of pure projective geometry without
+leveraging differential geometry to deal with general structure; sub-optimal use
+of multiple images, and the need for richer geometrical structuring of
+the scene.
+
+The research group of prof.\ Ricardo Fabbri has long proposed and worked on a new
+photogrammetric paradigm for the 3D reconstruction of rigid (\eg, plastic or
+metal industrial parts) and nonrigid objects (\eg, the ocean surface), from
+multiple images or video~\cite{Fabbri:Kimia:IJCV2016,Fabbri:PhD:2010,Fabbri:Giblin:Kimia:ECCV12,Fabbri:Kimia:EMMCVPR2005,Fabbri:Kimia:CVPR10,Usumezbas:Fabbri:Kimia:CVPR:2017,Usumezbas:Fabbri:Kimia:ECCV16}.
+Prof.\ Fabbri's research programme aims at overcoming the aforementioned
+limitations of state-of-the-art 3D reconstruction -- limited to interest points
+-- by employing the evidence available from 2D image curves, through a
+progressive representation based on the \emph{3D curve sketch} and the
+\emph{3D curve drawing}. Once an initial sketch of the 3D scene is obtained by
+matching curves across multiple views, this can be refined into a network of
+curves called the 3D curve drawing, and surface patches can be attached to these
+curves to generate a detailed 3D reconstruction. Notably, prof.\ Fabbri and
+colelagues were the first to introduce the 3D graphics technique of 
+Lofting to computer vision.
+
+This project aims to join the expertise of the proponent in graph algorithms and
+sensor networks with that of prof.\ Fabbri, to provide better algorithms to
+advance the 3D drawing reconstruction pipeline. Since tryting to reconstruct 3D
+water waves, prof.\ Fabbri has been working on graph-based machine learning
+algorithms to find patterns (clusters) in data, to generate better 3D
+reconstructions from image and multiview correspondence data graphs. 
+The main idea is that, while
+\emph{machine learning} allows one to find patterns (clusters) in data, 
+graph-based algorithms using spectral graph theory and diffusion-maps are more
+suitable the type of representation in the 3D drawing, which is not based on a
+regular grid. By exploring multiple view graphs available in the 3D drawing
+pipeline, it is possible to take advantage of the proponent's expertise in
+providing efficient graph algorithms; By using the proponent's expertise in sensor
+netowrks, it is possbile to optimize a dense 3D drawing-based
+reconstruction by selecting the views (sensors) to be used during
+reconstruction. More specifically, we plan to tackle the view-selection module of the
+3D drawing pipeline, and the lofting module that builds surfaces by pairing curves, as
+explained in the next section. 
+
+\noindent \textbf{Using Differential Geometry (edges, curves, surfaces) in multiview reconstruction:} There has been tremendous progress in the field for multiview reconstruction leading to large scale 3D reconstructions~\cite{Snavely:TOG:2006, snavely:CVPR:2008,abbasinejad2011surface,Frahm:ECCV:2010,Adami:RSSIS:2015,  Crandall:CVPR:2011, furukawa:CVPR:2010, Li:ECCV:2008, Schonberger:CVPR:2016,Heinly:CVPR:2015, Schonberger:ECCV:2016}. These methods typically use point features which lead to 3D unorganized point cloud reconstructions. Some use of line-based reconstruction is also made. These methods, however, fail when the number of features drop or when the number of features is high but due to repeated texture whose correspondence is hard to disambiguate,  Figure \ref{fig:XYZ1}. In such situations, however, there is often ample curve structure available, Figure \ref{fig:XYZ1}. In general, the following situations are a bottleneck to current approaches: {\em(i)} large homogeneous areas which lack in features either reduce the number of features for pose estimation or lead to large gaps in the reconstruction; {\em(ii)} repeated textures, like brick walls give rise to a large number of features, but it is difficult to discern the correct correspondence; {\em(iii)} blurred images, {\em e.g.}, which may arise from fast moving vehicles or while a camera turns reduce the number of point features but curvilinear structure can be obtained; {\em(iv)} images undergoing large scale change or viewing change do not typically share many point correspondences, but they more frequently share curve correspondences; {\em(v)} curves also better with non-rigid structures and moving objects which require their own set of features per rigid structure. Also, in odometry, image point features in absolute pose estimation must be specifically in the world reconstruction thus limiting the baseline, while curves are more robust to visual transformations and expand thing range. Edges and curves are omnipresent and can be utilized as a correspondence structure alternative that are more robust to larger viewing changes and are more immune to motion blur~\cite{smith2006real,gee2006real,klein2008improving,zhao2018good}. 
+Challenges facing use of curve-base multiview matching include: inaccurate locations of line endpoints, fragmentation of lines, lack of strongly disambiguating geometric constraints, and lack of distinctive appearance in low texture scenes. These challenges motivate the use of local curve segments, characterized by differential geometry~\cite{do2016differential}, on an initial use of structure
+
 \begin{figure*}
   \begin{center}
     \includegraphics[width=\linewidth]{figs/lofting-pipeline.png}
@@ -532,7 +584,12 @@ geometries. This structure is the final 3D curve drawing.
 
 \section{Methodology}
 
-\section{Results}
+\section{Expected Results}
+\begin{itemize}
+\item A module in the 3D curve drawing pipeline to better select views for
+  reconstruction, based on the reconstruction that has already been performed
+\item A module for merging 3D surface patches based on multiview information.
+\end{itemize}
 
 \section{Cronograma das Atividades}
 A tabela abaixo mostra o cronograma para as principais atividades descritas. Para a
