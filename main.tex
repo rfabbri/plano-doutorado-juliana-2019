@@ -178,7 +178,6 @@ TODO
 \item Include prev projects for book
 \item Think: how to make nonlinear reconstruction useful here
 \item Recall my hand notes on this
-\item Bring in whatever is useful from NSF prop.
 \item Photos I had taken from whiteboard with Ben in 2018
 \end{itemize}
 
@@ -206,7 +205,8 @@ due to a gold rush to capitalize on applications immediately made possible with
 these tools, and partly due to evident limitations of the technology uncovered
 in the process~\cite{AppleKeynote:2018}. 
 We claim these limitations are largely rooted in three core issues to be
-addressed in this research: the naive use of pure projective geometry without
+addressed in this research: the naive use of pure projective geometry of points
+without
 leveraging differential geometry to deal with general structure; sub-optimal use
 of multiple images, and the need for richer geometrical structuring of
 the scene.
@@ -245,11 +245,9 @@ reconstruction. More specifically, we plan to tackle the view-selection module o
 3D drawing pipeline, and the lofting module that builds surfaces by pairing curves, as
 explained in the next section. 
 
-\noindent \textbf{Using Differential Geometry (edges, curves, surfaces) in multiview reconstruction:} There has been tremendous progress in the field for multiview reconstruction leading to large scale 3D reconstructions~\cite{Snavely:TOG:2006, snavely:CVPR:2008,abbasinejad2011surface,Frahm:ECCV:2010,Adami:RSSIS:2015,  Crandall:CVPR:2011, furukawa:CVPR:2010, Li:ECCV:2008, Schonberger:CVPR:2016,Heinly:CVPR:2015, Schonberger:ECCV:2016}. These methods typically use point features which lead to 3D unorganized point cloud reconstructions. Some use of line-based reconstruction is also made. These methods, however, fail when the number of features drop or when the number of features is high but due to repeated texture whose correspondence is hard to disambiguate,  Figure \ref{fig:XYZ1}. In such situations, however, there is often ample curve structure available, Figure \ref{fig:XYZ1}. In general, the following situations are a bottleneck to current approaches: {\em(i)} large homogeneous areas which lack in features either reduce the number of features for pose estimation or lead to large gaps in the reconstruction; {\em(ii)} repeated textures, like brick walls give rise to a large number of features, but it is difficult to discern the correct correspondence; {\em(iii)} blurred images, {\em e.g.}, which may arise from fast moving vehicles or while a camera turns reduce the number of point features but curvilinear structure can be obtained; {\em(iv)} images undergoing large scale change or viewing change do not typically share many point correspondences, but they more frequently share curve correspondences; {\em(v)} curves also better with non-rigid structures and moving objects which require their own set of features per rigid structure. Also, in odometry, image point features in absolute pose estimation must be specifically in the world reconstruction thus limiting the baseline, while curves are more robust to visual transformations and expand thing range. Edges and curves are omnipresent and can be utilized as a correspondence structure alternative that are more robust to larger viewing changes and are more immune to motion blur~\cite{smith2006real,gee2006real,klein2008improving,zhao2018good}. 
-Challenges facing use of curve-base multiview matching include: inaccurate locations of line endpoints, fragmentation of lines, lack of strongly disambiguating geometric constraints, and lack of distinctive appearance in low texture scenes. These challenges motivate the use of local curve segments, characterized by differential geometry~\cite{do2016differential}, on an initial use of structure
-
 \begin{figure*}
   \begin{center}
+    \includegraphics[width=\linewidth]{figs/mega-system-drawing-pt.pdf}
     \includegraphics[width=\linewidth]{figs/lofting-pipeline.png}
   \end{center}
 %  \ReduceBeforeCaptionfigspace
@@ -580,6 +578,9 @@ geometries. This structure is the final 3D curve drawing.
 \item Help with the book to be published
 \item Take part in helping teach a graduate-level course.
 \end{itemize}
+
+\paragraph{Impact}
+
 
 
 \section{Methodology}
