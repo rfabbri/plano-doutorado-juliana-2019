@@ -1,0 +1,67 @@
+\begin{titlepage}
+\begin{changemargin}{-0.5cm}{-1cm}
+\renewcommand{\title}{%
+  {\LARGE Multiview 3D Reconstruction}\\
+  {\LARGE Using graph diffusion machine learning}\\[4pt]
+%  Evolution digitaler Schaltkreise%
+}
+\renewcommand{\author}{Simon Shamoun, Ph.D.}
+\renewcommand{\date}{\today}
+\newcommand{\info}{%
+  \raisebox{4pt}[-4pt]{%
+  \includegraphics[height=1.3cm]{figs/logo-iprj2.eps} 
+  \hspace{0.1in}
+  }\\
+
+  Grupo de Visualiza��o\\
+  Instituto Polit�cnico -- IPRJ\\
+  Universidade do Estado do Rio de Janeiro\\[1.5cm]
+
+  Nova Friburgo, \date\\[1.5cm]
+
+  \textbf{Projetos Relacionados}\\[4pt]
+   FAPERJ Jovem Cientista do Nosso Estado E25/2014 204167\\
+   FAPERJ APQ1 01/09335-8\\
+   FAPERJ E28/2014/204747\\
+   UERJ Proci�ncia 2014--2017
+}
+
+%% Abstand zwischen oberem Blattrand und Titel.
+\newlength{\topToTitle} 
+\setlength{\topToTitle}{30pt}
+
+%% Abstand zwischen linkem Blattrand und Titel.
+\newlength{\leftToTitle} 
+\setlength{\leftToTitle}{-50pt}
+
+%% Abstand zwischen Titel und Info-Feld.
+\newlength{\titleToInfo} 
+\setlength{\titleToInfo}{7cm}
+
+%% \myTextWidth erhoehen, um Info-Feld weiter nach Rechts zu schieben.
+\newlength{\myTextWidth}
+\setlength{\myTextWidth}{\textwidth}
+\advance\myTextWidth by 1.5cm
+
+
+\thispagestyle{empty}
+\vspace*{\topToTitle}
+\begin{minipage}{\myTextWidth}
+  \sffamily
+  \hspace*{\leftToTitle}\begin{minipage}{60cm}
+    \Large\textbf{Projeto de Pesquisa}\\[1.5cm]
+    \title\\[1.5cm]
+    \author
+  \end{minipage}\\
+
+  %% \enlargethispage{} um ggfs. Titel und Info-Feld weiter
+  %% auseinanderziehen zu koennen.
+  \vspace*{\titleToInfo}
+
+  \begin{minipage}{\textwidth}
+    \flushright
+    \info
+  \end{minipage}
+\end{minipage}%
+\end{changemargin}
+\end{titlepage}
