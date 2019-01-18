@@ -196,6 +196,16 @@ TODO
   [figure of pipelines] - say we are working on the surface pipelines
 \end{draft}
 
+\begin{figure*}
+  \begin{center}
+    \includegraphics[width=\linewidth]{figs/lofting-pipeline.png}
+  \end{center}
+%  \ReduceBeforeCaptionfigspace
+  \caption{A visual illustration of our dense surface reconstruction pipeline.
+  }
+%  \ReduceAfterCaptionfigspace
+  \label{fig:lofting:pipeline}
+\end{figure*}
 
 \section{Objectives}
 
@@ -482,6 +492,38 @@ Multiview Curve Drawing Graph (MDG), which consists of multiple disconnected 3D
 graphs, one for each 3D curve cluster in the MCCN. The nodes of each graph are
 the junctions (with curve endpoints) and the links are curve fragment
 geometries. This structure is the final 3D curve drawing.
+
+\begin{figure}[h!]
+\begin{center}
+  \begin{draft} 
+  [orig chair images here]
+  \end{draft}
+%   \includegraphics[width=1.0\linewidth]{figs/3d-curve-sketch/system-diagram.eps}
+    \includegraphics[width=0.45\linewidth]{figs/pavilion-midday-pmvs-1.png}
+    \includegraphics[width=0.45\linewidth]{figs/pavilion-midday-pmvs-2.png}\\
+    \includegraphics[width=0.45\linewidth]{figs/pavilion-loft2sm.png}
+    \includegraphics[width=0.45\linewidth]{figs/pavilion-loft1sm.png}
+\end{center}
+\vspace{-0.7truecm}
+   \caption{%
+     \textbf{Acima:} reconstrução 3D tradicional por \emph{structure from motion} de
+     pontos. \textbf{Abaixo:}
+     Reconstrução 3D de superfícies pasando-se por
+     curvas~\cite{Usumezbas:Fabbri:Kimia:CVPR:2017} em objetos difíceis de
+     reconstruir usando pontos de interesse ou apenas intensidade. Esta
+     reconstrução usa apenas informação de curvas, sem nenhum sombreadmento,
+     sendo extremamente robusta a grande variações de iluminação. Pretende-se, neste projeto,
+     usar um algoritmo de agrupamento dos fragmentos de superfície mais
+     elaborado (um avanço na última caixa listada na
+     Figura~\ref{fig:system:diagram}, bem como usar a informação temporal em vídeo para reconstruir
+     contornos de oclusão (siluetas locais), uma técnica com uma teoria muito
+     promissora~\cite{Giblin:Motion:Book} que nunca foi posta em
+     prática pois a tecnologia de reconstrução 3D por curvas não era desenvolvida.
+     Este último seria um avanço significativo na penúltima caixa da
+     Figura~\ref{fig:system:diagram}.
+   }\label{fig:chairs}
+\end{figure}
+
 
 
 \subsection{Other objectives}
