@@ -265,255 +265,305 @@ permitiria o uso de estruturas curvilíneas para a estimação de câmeras, e o estu
 de mais de três imagens cai em problemas genéricos de aprendizagem e otimização
 e intratabilidade, com pouca robustez. Mais detalhes são fornecidos a seguir.
 
-
-
-\section{Multiview Reconstruction of the 3D Curve Drawing}
-This section summarizes our prior work on recovering the scene curve structure,
-the \textbf{3D curve drawing}, from image curves in multiple calibrated views
-with known pose. The mathematical foundation is presented
-in~\cite{fabbri2016multiview} relating the differential properties of a 3D curve
-$\Gamma(S)$, where $\Gamma$ is a 3D point in the camera coordinate system and
-$S$ is a parametrization of the 2D curve, to the image curve it projects to,
-$\gama(s)$, where $\gama$ is an image point and $s$ is a parametrization of the
-3D curve. Using the relation $\Gamma(S) = \rho(s) \gama(S)$, where $\rho$ is the
-depth of point of $\Gama$, the differential geometry of the 3D curve $\{
-\boldsymbol{T},\boldsymbol{N},\boldsymbol{B}, K, \dot{K},\tau, G,G',G''\}$ is
-related to the differential geometry of the curve $\{\boldsymbol{\gamma},
+\section{Reconstrução do Desenho 3D a partir de múltiplas perspectivas}
+Esta seção resume o trabalho anterior de Fabbri~\etal sobre o paradigma do
+Desenho 3D para reconstrução de cenas (coleções de objetos) a partir de múltiplas imagens.
+O fundamento matemático está presente em~\cite{fabbri2016multiview},
+relacionando as propriedades diferencias de uma curva 3D
+$\Gamma(S)$, onde $\Gamma$ é um ponto 3D (possivelmente em uma curva) no sistema
+de coordenadas de câmera, e $S$ is é uma parametrização da curva 2D
+correspondente, $\gama(s)$, onde $\gama$ é um ponto em uma imagem e $s$ é uma
+parametrização da curva 3D. Usando-se a relação
+$\Gamma(S) = \rho(s) \gama(S)$, onde $\rho$ é a profindidade do ponto
+denotado por $\Gama$, a geoemtria diferencial da curva 3D
+$\{
+\boldsymbol{T},\boldsymbol{N},\boldsymbol{B}, K, \dot{K},\tau, G,G',G''\}$ é
+relacionada à geometria diferencial da curva 
+$\{\boldsymbol{\gamma},
 \boldsymbol{t}, \boldsymbol{n}, \kappa, \dot{\kappa}, g, g', g'',\rho,
-\rho',\rho'',\rho'''\}$, where
-$\{\boldsymbol{T},\boldsymbol{N},\boldsymbol{B}\}$ is the Frenet frame of the 3D
-curve, \textit{i.e.}, the unit tangent, normal, and binormal, $(\boldsymbol{t},
-\boldsymbol{n})$ is the Frenet frame of the 2D curve, \textit{i.e.,} the unit
-tangent and normal, $K$ and $\tau$ are the curvature and torsion of the space
-curve, respectively, $k$ is the curvature of the image curve, $G$ and $g$ are
-the speed of parameterization of the 3D and 2D curves, respectively, and where
-`` $'$ " and `` $\cdot$ " denote differentiation with respect to an arbitrary
-spatial parameter ($S$ or $s$) or arc-length parametrization, respectively. Note
-that $\dot{k}$ and $\dot{K}$ are intrinsic quantities. The interesting
-observation is that differential quantities of each order in 3D are related only
-to the same order or less in 2D as proved in~\cite{fabbri2016multiview}. For
-example, the space curve tangent can be written as
-$\boldsymbol{T}=\rho'\boldsymbol{\gamma}+\rho g \boldsymbol{t}$, while the image
-curve tangent is $\boldsymbol{t}=\frac{\boldsymbol{T}-e^T_3\boldsymbol{T}
-\boldsymbol{\gamma}}{||\boldsymbol{T}-e^T_3\boldsymbol{T}
-\boldsymbol{\gamma}||}$,  where $e_3^T=(0,0,1)$, and that the ratio of speeds of
-parameterization is an intrinsic quantity
-$\frac{g}{G}=\frac{||\boldsymbol{T}-e^T_3\boldsymbol{T}
-\boldsymbol{\gamma}||}{e^T_3\boldsymbol{T}}$.
+\rho',\rho'',\rho'''\}$, onde
+$\{\boldsymbol{T},\boldsymbol{N},\boldsymbol{B}\}$ é o triedro de Frenet da
+curva 3D, \ie, a tangente, normal e binormal unitário, 
+$K$ e $\tau$ são as curvatura e torção and torsion da curva espacial, resp.,
+$\kappa$ é a curvatura da curva numa imagem, e $G$ e $g$ são as velocidades de
+parametrização das curvas 3D e 2D, resp., e onde
+`` $'$ " e `` $\cdot$ " simbolizam a diferenciação relativa a um parâmetro
+espacial arbitrário ($S$ ou $s$) ou parametrização por comprimento de arco,
+resp. 
 
-These relationships are very important for relating three or more views or for
-reconstructing a scene:  We showed how differential geometry properties in two
-views (tangent, curvature, curvature derivatives) reconstruct differential
-geometry properties in 3D (3D tangent, curvature, torsion), as well
-reconstructing the differential geometry properties in another view (third view
-tangent, curvature, curvature derivative), Figure~\ref{fig:WW1}. We also showed
-how the differential properties of a deforming (non-stationary) curve related to
-the differential properties of the deforming projected curve, \textit{e.g.,} for
-the contour generators of an occluding contour as view changes. When the 3D
-curve is stationary (non-deforming), it constrains the projected curves in
-multiple views. In this proposal we mainly focus on using first-order properties
-(tangent), as a first step, since the use of higher-order derivatives requires
-very careful numerical considerations, as shown possible in the successful use
-of third-order orientation estimation in~\cite{kimia2018differential}, but for
-now we only plan to use a coarse discretization of curvature as a way of pruning
-possible matches.
+Note-se que $\dot{\kappa}$ e $\dot{K}$ compõe modelos intrínsecos das curvas. 
+Foi demonstrado pela primeira vez por Fabbri~\etal~\cite{fabbri2016multiview} como
+essas quantias estão relacionadas. Por exemplo, o vetor tangente à curva
+espacial pode ser escrito como 
+$\boldsymbol{T}=\rho'\boldsymbol{\gamma}+\rho g \boldsymbol{t}$, e a tangente à
+curva projetada é $\boldsymbol{t}=\frac{\boldsymbol{T}-e^T_3\boldsymbol{T}
+\boldsymbol{\gamma}}{||\boldsymbol{T}-e^T_3\boldsymbol{T}
+\boldsymbol{\gamma}||}$,  onde $e_3^T=(0,0,1)$. Outro exemplo é que a razão das
+velocidades de parametrização é uma quantia intrínseca
+$\frac{g}{G}=\frac{||\boldsymbol{T}-e^T_3\boldsymbol{T}
+\boldsymbol{\gamma}||}{e^T_3\boldsymbol{T}}$. Também foi demonstrada a
+reconstrução de uma curva espacial (\ie, de torção não-nula) pela primeira vez na literatura.
+
+
+Essas relações são muito impotantes para se relacionar três ou mais imagens 
+de multiplas vistas ou para reconstruir-se uma cena: foi mostrado como 
+a geometria diferencial em duas vistas (tangente, curvatura, e
+derivada da curvatura) reconstroem a geometria diferencial em 3D (tangente,
+curvatura e torção em 3D), Figure~\ref{fig:WW1}
+Neste projeto, focaremos na continuidade da pesquisa de Fabbri no ICERM/Brown
+University iniciada por seu aluno de mestrado David de Pinho, a qual foca 
+nas propriedades de primeira ordem (tangente) como um primeiro porém
+importantíssimo passo que já despertou grande interesse da comunidade
+científica e industrial (no ramo de realidade aumentada e reconstrução de
+fluidos).
 
 \begin{figure}[h]
     \centering
-    (a)\includegraphics[width=0.29 \linewidth]{figs/FigureWW1/image51.png}
-    (b)\includegraphics[width=0.29 \linewidth]{figs/FigureWW1/image211.png}
-    (c)\includegraphics[width=0.29 \linewidth]{figs/FigureWW1/image18.png}
-\caption{The differential geometry of a 3D curve and its projections are related, e.g., tangents in two views reconstruct tangents in space and therefore tangents in other views.}
+    a\includegraphics[width=0.45 \linewidth]{figs/FigureWW1/image51.png}\ 
+    b\includegraphics[width=0.45 \linewidth]{figs/FigureWW1/image211.png}
+    c\includegraphics[width=0.45 \linewidth]{figs/FigureWW1/image18.png}
+\caption{A geometria diferencial de uma curva 3D e suas projeções são
+  relacionadas por equações, no caso um modelo local de primeira ordem (vetor
+  tangente) em duas imagens reconstroem as tangentes no espaço tridimensional,
+  e, através deste, as tangentes (modelos locais) em outras imagens.
+}
     \label{fig:WW1}
     \vspace{-0.2cm}
 \end{figure}
-A key accomplishment of this framework is the extraction of a 3D curve drawing
-when many calibrated views of a scene with known pose are available. Briefly,
-each curve segment in one view (anchor view) seeks corresponding portions of
-curve segments in some other view (hypothesis view) to hypothesize a 3D curve
-segment, which then seeks confirmation by reprojecting in other views
-(confirmation views). This results in an unorganized set of 3D curve segments,
-referred to as a "3D curve
-sketch"~\cite{fabbri2011multiview,fabbri2016multiview}, Figure~\ref{fig:XX1}(c).
-A 3D curve sketch suffers from erroneous grouping and gaps, and is highly
-redundant due to the rotating assignment of anchor/hypothesis/confirmation
-views, which prompted~\cite{usumezbas2016multiview} to use topological
-connectivity to produce a connected set of long curve segments, referred to as a
-"3D curve drawing", Figure~\ref{fig:XX1} (d).
-
-\begin{itemize}
-\item solver, curves
-\end{itemize}
-
+A linha de trabalhos mais práticos de Fabbri~\etal\ permite extrair um desenho
+3D e superfícies acopladas, representando objetos vistos por imagens. 
+As etapas desse sistema prático de reconstrução 3D são ilustradas na
+figura~\label{fig:lofting:pipeline}, sendo que nem todos os módulos ainda foram
+publicados.
+De maneira resumida, uma vez que as posições de câmeras tenham sido calculadas,
+usando-se o trabalho desenvolvido por Fabbri junto ao aluno David de Pinho,
+e junto ao célebre matemático Peter Giblin,
+cada segmento de curva em uma imagem busca porções correspondentes de curvas em
+alguma outra imagem para assim hipotetizar um fragmento de curva 3D, hipótese
+esta que é confirmada ou refutada reprojetando-se em outras imagens. Esse
+processo resulta em um conjunto inicial desorganizado de fragmentos 3D
+denominado ``eboço 3D de
+curvas''~\cite{fabbri2011multiview,fabbri2016multiview},
+Figure~\ref{fig:lofting:pipeline} (\emph{3D curve sketch}). Neste estágio
+inicial de reconstrução, o esboço 3D de curvas sofre de erros de agrupamentos e
+fragmentações, além de redundância já que a informação ainda não foi integrada
+para diferentes pares de imagens, o que motivou Fabbri~\etal~\citet{usumezbas2016multiview}
+a explorar a conectividade topologica  para produzir um grafo conexo de
+curvas longas, denominado ``desenho 3D de curvas'', ver terceira linha na
+Figura~\ref{fig:lofting:pipeline}.
 \begin{figure*}
   \begin{center}
     \includegraphics[width=\linewidth]{figs/mega-system-drawing-pt.pdf}
     \includegraphics[width=\linewidth]{figs/lofting-pipeline.png}
   \end{center}
 %  \ReduceBeforeCaptionfigspace
-  \caption{A visual illustration of our dense surface reconstruction pipeline.
-  }
+  \caption{Uma ilustração de um sistema completo de visão 3D baseado em curvas e
+  superfícies. Muitos desses módulos ainda estão em desenvolvimento.}
 %  \ReduceAfterCaptionfigspace
   \label{fig:lofting:pipeline}
 \end{figure*}
 
-\section{Objectives}
+\section{Objetivos}
 
+Na Figura~\ref{fig:lofting:pipeline} ilustrando os módulos do sistema de
+reconstrução 3D que compõe a pesquisa do prof.\ Fabbri, pretende-se abordar as
+caixas em verde na primeira linha, em especial o módulo ``Curve-Based Trifocal
+Pose Estimation'', usando-se ferramentas de aprendizagem de máquina baseada em
+difusão em grafos e teoria de padrões.
 
 \section{Aprendizagem de caminhos em \emph{solvers} por continuação homotópica}
+Pretende-se explorar a estrutura de sistemas dinâmicos proveniente do
+rastreamento de soluções de equações não-lineares algébricas para produzir um solver
+rápido baseado em continuação homotópica. Durante a estadia do prof.\ Fabbri
+liderando um ``research cluster'' (grupo de pesquisa temporário, similar a um workshop de
+longa duração), foi produzido, pela primeira vez, um novo \emph{solver} para o
+problema de se determinar a posição relativa de três câmeras a partir de três
+imagens de curvas, Figura~\ref{fig:WW1}. Foi determinado que o problema é
+sobredeterminado, e ignorando-se uma tangente, o problema se reduz a um
+polinômio de grau 320~\cite{fabbri:arxiv}. Foi produzido um solver rápido e
+determinístico com técnicas estado da arte de geometria algébrica numérica no
+rastreamento de soluções por continuação homotópica, resolvendo 11 variáveis de
+três câmeras (rotação e translação) na ordem de 600ms.  No entanto, diversas
+aplicações práticas requerem um tempo de execução em nanosegundos ou mesmo
+microsegundos. Um dos objetivos deste projeto é aprender a estrutura das
+equações e das trajetórias desse sistema dinâmico realizado pelo \emph{solver}, de forma a
+melhor inicializar as 320 soluções o mais próximo possível do resultado final.
+No entanto, o comportamento dessas trajetórias é pouco conhecido dos
+pesquisadores em geometria algébrica.
+Pretende-se, para isso, aprender o comportamento das trajetórias e utilizar o
+conhecimento de equações diferencias do prof.\ Francisco Moura Neto.
+
+\begin{figure}
+   \centering
+   \begin{tabular}{cc}
+   \includegraphics[width=0.4\linewidth]{figs/data-sphere-new-v2}\\
+   \includegraphics[width=0.4\linewidth]{figs/syntheticSampleImagesStereSm.png}
+   \end{tabular}
+   \caption{Dados de ``treinamento'' fornecendo uma amostra representativa de
+     100 configurações iniciais. Em cada imagem, o solver por continuação
+     homotópica fornece trajetórias que podem ser aprendidas e otimizadas, para
+     gerar um solver muito rápido.
+   }% (Dataset evolved from~\cite{Fabbri:Giblin:Kimia:ECCV12,Fabbri:Kimia:IJCV2016}) }
+\label{fig:synth:data:sample}
+\end{figure}
 
 \section{Geometria trifocal de curvas curvas: de local a global}
 
-\texttt{To be
-elaborated on\dots}\\ The dynamic curve fragment gives a set of corresponding
-curves $C_f$,
-$f=1, 2, ...,, F$ in $F$ frames. Let $\alpha(\xi)$ be the
-$n$-fold alignment curve such that
+
+O segundo grande objetivo deste trabalho é levar o \emph{solver} local citado na
+seção anterior à construção de um \emph{solver} global, que utilize não apenas
+triplas de pontos-tangentes nas curvas, como também integre solução na curva toda.
+Ao mesmo tempo, isto permite resolver o problema da correspondência entre
+curvas, através de um sistema de hipotetizar-e-testar.
+
+Seja um conjunto de fragmentos de curvas em correspondência hipotética
+$C_f$, $f=1, 2, ...,, F$ em $F$ imagens. Seja $\alpha(\xi)$ 
+a curva de alinhamento definida por
 \[
 \alpha (\xi)= (s_1(\xi), s_2(\xi), ....., s_F(\xi)), \quad\quad \xi\in[0,1],
 \]
-such that the points $\{C_1(s_1(\xi)), C_2(s_2(\xi)), ....., C_F(s_F(\xi))\}$ are in
-correspondence. We also use the notation $\alpha_{ij}(\xi) = \left(
-s_i(\xi),s_j(\xi) \right)$ to denote an alignment between curve fragments $i$
-and $j$. Observe that given the alignment between any two fragments
-$\alpha_{ij}$, we can reconstruct the epipolar
-geometry, since $\xi\in[0,1]$ generates numerous corresponding pairs of points
-(more than seven), \ie, $\xi_1,\xi_2,\dots,\xi_7$ gives the seven corresponding
-pairs of points $\left( C_1(s_1(\xi_i)),\,C_2(s_2(\xi_i)) \right)$,
-$i=1,2,\dots,7$. However, this can be viewed in differential form: let $\xi_2 =
-\xi_1 + \Delta\xi$ and let $\Delta\xi \to 0$. Then, the correspondences $\left( C_1(s_1(\xi_1)),\,C_2(s_2(\xi_1)) \right)$
-and $\left( C_1(s_1(\xi_2)),\,C_2(s_2(\xi_2)) \right)$ in the limit are
-equivalent to the correspondence $\left( C_1(s_1(\xi_1)),\,C_2(s_2(\xi_1)) \right)$
-and the correspondence in
-unit tangents $(\t_1(s_1(\xi_1)),\,\t_2(s_2(\xi_1))$. The same holds for $k$ and
-$k_s$ \texttt{[Ric: spell out]}. Also, this dependency can be written explicitly
-in terms of epipolar geometry and camera parameters \texttt{[Ric: do.]}
+tal que os pontos $\{C_1(s_1(\xi)), C_2(s_2(\xi)), ....., C_F(s_F(\xi))\}$ estão
+em correspondência. Usa-se a notação $\alpha_{ij}(\xi) = \left(
+s_i(\xi),s_j(\xi) \right)$ para simbolizar o alinhamento entre fragmentos $i$ e
+$j$.
+
+Dado o alinhamento entre quaisquer dois fragmentos
+$\alpha_{ij}$, pode-se recostruir a geometria epipolar (representando a
+disposição relativa entre as imagens), já que 
+$\xi\in[0,1]$ gera inúmeros pares em correspondência, \eg,
+$\xi_1,\xi_2,\dots,\xi_7$ fornece sete pontos
+$\left( C_1(s_1(\xi_i)),\,C_2(s_2(\xi_i)) \right)$,
+$i=1,2,\dots,7$. 
+
+Para o caso de interesse de três imagens,
+$\alpha_{12}(\xi)= (s_1,s_2)$ e $\alpha_{13}(\xi)= (s_1,s_3)$ fornece, a
+princípio,
+curvas de alinhamento independentes  $(C_1, C_2)$ e $(C_1, C_3)$. 
+No entanto, isto não é livre de restrições entre $(C_2,C_3)$.
+Na integração de informação local, mapas de difusão e teoria de padrões podem
+auxiliar; em particular a curva de alinhamento não é uma curva completamente
+livre, no início do sistema de reconstrução 3D, mas é parte do espaço de curvas
+monotônicas, cuja dimensão é restrita. Empregar esses tipos de algoritmos no
+caso de informação discreta é um dos pontos fortes da pesquisa com o prof.\ Mora
+NEto.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{figs/tri-alignment-eps-converted-to.pdf}
 \caption{
-Alignment curve between three views.
+  Curva de alinhamento entre três curvas em três imagens.
 }
 \label{fig:trialign}
 \end{figure}
 
-\paragraph{Ric: explore this and its degeneracies}. For three frames
-$\alpha_{12}(\xi)= (s_1,s_2)$ and  $\alpha_{13}(\xi)= (s_1,s_3)$ gives
-independent alignment between $(C_1, C_2)$ and $(C_1, C_3)$. However, is this
-completely free of constraints between $(C_2,C_3)$? The alignment curve is not a
-completely free curve in the monotonic space of curves: its dimension is
-restricted so there must be constraint.\texttt{[Ric: lets discuss].}
 
 
 
-
-
-\textbf{Multiview Local Consistency Network:}
-The key idea underlying integration of reconstructions across views is the
-detection of a common image structure supporting two reconstruction hypotheses. 
-Two 3D local curve segments depict the same single underlying
-3D object feature if they are supported by the same 2D image edge structures. 
-Since the identification of common image structure can vary along the curve, it
-must necessarily be a local process, operating at the level of a 3D local edge
-and not a 3D curve. 
-Two 3D edge elements (edgels) depict the same 3D structure if they 
-receive support from the same 2D edgels in a sufficient number of views, so
-3D-2D links between a 2D edgel to the 3D edgel it supports must be kept. Typically,
-they share supporting image edges in many views; and the number of shared
-supporting edgels is the measure of strength for a 3D-3D link between them.
-
-Formally, we define the Multiview Local
-geometric consistency Network (MLN) as pointwise alignments $\phi_{ij}$ between 
-two 3D curves $\Gama_i$ and $\Gama_j$: let $\Gama_i(s_i)$ and $\Gama_j(s_j)$ be
-two points in two 3D curves, and define
-\begin{equation}
-S_{ij} \doteq \{v : \gama^{i,v}(s_i) \text{ and } \gama^{j,v}(s_j) \text{ share local support}\}.
-\end{equation}
-Then the a kernel function $\phi$ defines a consistency link between these two points,
-weighted by the extent of multiview image support $\phi_{ij}(s_i,s_j) \doteq
-|S_{ij}|$. When the curves are sampled, $\phi$ becomes an adjacency matrix of a
-graph representing links between individual curve samples.
-The implementation goes through each image edgel which votes for a 3D curve
-point that has received support from it (see the supplementary material for
-details).
-
-%\draftnote{cross check terminology w/ amir linking graphs}
-%\draftnote{parametrized alignment to write integrals}
-%\vspace{-0.3cm}
-\begin{figure}
-	%\captionsetup[subfigure]{labelformat=empty}
-	\centering
-	\begin{tabular}{cc}
-%    \vspace{-0.3cm}
-		\multirow{2}[2]{*}[20mm]{\includegraphics[width=0.75\linewidth]{figs/master-figure.png}} &
-		\includegraphics[width=0.2\linewidth]{figs/cluster32-2.png}\\
-		&
-		\includegraphics[width=0.2\linewidth]{figs/cluster32-corr2.png}
-	\end{tabular}
-  \vspace{2em}
-	\caption{The four bottlenecks of
-		Fig.~\ref{fig:issues:remaining} are resolved by integration of
-		information/cues from all views. (a) The shared supporting edges, which are marked with circles, create the purple links between the corresponding samples of the 3D curves. These purple bonds will then be used to pull the redundant segments together and reorganize the 3D model into a clean 3D graph. Observe how the determination of common	image support can identify portions of the green and blue curves as identical	while differentiating the red one as distinct. A real example for a bundle of related curves is shown in (b) and the links among their edges in (c).
-	}
-	%   based on which 3D information with a
-	%   common cause can be integrated, leading to a four-stage process of $(i)$
-	%   establishing the links as pictured above, $(ii)$ identifying portions of 3D
-	%   curves which arise from the same source, Fig~\ref{fig:overlap:masks}, $(iii)$
-	%   precise localization for 3D curves with a common cause,
-	%   Fig~\ref{fig:graph:organization}a, (iv) Topological merging of these
-	%   segments, leading to a topological graph of 3D curve segments,
-	%   Fig~\ref{fig:graph:organization}e.}\label{fig:master:figure}
-\end{figure}
-
-%\vspace{-0.3cm}
-
-\textbf{Multiview Curve-level Consistency Network:}
-The identification of 3D edges sharing 2D edges leads to
-high recall operating point with many false links due to accidental alignment of
-edge support. False positives can be reduced without affecting high
-recall by employing a notion of curve context for each 3D edgel: a link
-between two 3D edgels based on a supporting 2D edgel is more effective if
-the respective neighbors of the underlying 3D edge on the underlying 3D curve
-are also linked. 
-
-The curve context idea requires establishing new pairwise links between 3D
-curves using MLN, when there are a sufficient number of links with
-$\phi_{ij}>\tau_{\epsilon}$ between their constituent 3D edges (in our
-implementation, $\tau_{\epsilon}=3$ and we require 5 such edges or more). The
-linking of 3D curves is represented by the Multiview Curve-level Consistency
-network (MCCN), a graph whose nodes are the 3D curves $\Gama_j$ and the edges
-represent the presence of high-weight 3D edge links between these 3D curves. The
-\mccn graph allows for a clustering of 3D curves by finding connected
-components; and once a link is established between two curves, there is a high
-likelihood of their edges corresponding in a regularized fashion, thus
-fewer common supporting 2D edges are required to establish a link between all
-their constituent 3D edges. This fact is used to perform gap filling, since even
-no edge support is acceptable to fill in small gaps and create a continuous and
-regularized correspondence if both neighbors of the gap are connected (see
-pseudocode in Supplementary Materials for details). The two stages in
-tandem, \ie, high recall linking of 3D edges and use of curve context to reduce
-false positives leads to high recall and high precision, \textit{i.e.}, all the
-3D edges which need to be related are related and very few outlier connections
-remain.
-
-\begin{figure}
-	\captionsetup[subfigure]{labelformat=empty}
-	\centering
-	\begin{tabular}{cc}
-		\multirow{2}[2]{*}[13mm]{\includegraphics[width=0.55\linewidth]{figs/need-for-clusters.png}} &
-		\includegraphics[width=0.45\linewidth]{figs/cluster7.png}\\
-		&
-		\includegraphics[width=0.45\linewidth]{figs/cluster7-corr.png}
-		\\
-	\end{tabular}
-	%\ReduceBeforeCaptionfigspace
-	\caption{\small 
-		The correspondence between 3D edge samples is skewed along a curve, a direct indication that these links cannot be used as-is when averaging and fusing redundant curve reconstructions. Instead, each point is assumed to be in correspondence with the point closest to it on another overlapping curve, during the iterative averaging step. Observe that corrections can be partial along related
-		curves.
-	}
-	\label{fig:overlap:masks}
-\end{figure}
+%%%%%     \textbf{Multiview Local Consistency Network:}
+%%%%%     The key idea underlying integration of reconstructions across views is the
+%%%%%     detection of a common image structure supporting two reconstruction hypotheses. 
+%%%%%     Two 3D local curve segments depict the same single underlying
+%%%%%     3D object feature if they are supported by the same 2D image edge structures. 
+%%%%%     Since the identification of common image structure can vary along the curve, it
+%%%%%     must necessarily be a local process, operating at the level of a 3D local edge
+%%%%%     and not a 3D curve. 
+%%%%%     Two 3D edge elements (edgels) depict the same 3D structure if they 
+%%%%%     receive support from the same 2D edgels in a sufficient number of views, so
+%%%%%     3D-2D links between a 2D edgel to the 3D edgel it supports must be kept. Typically,
+%%%%%     they share supporting image edges in many views; and the number of shared
+%%%%%     supporting edgels is the measure of strength for a 3D-3D link between them.
+%%%%%     
+%%%%%     Formally, we define the Multiview Local
+%%%%%     geometric consistency Network (MLN) as pointwise alignments $\phi_{ij}$ between 
+%%%%%     two 3D curves $\Gama_i$ and $\Gama_j$: let $\Gama_i(s_i)$ and $\Gama_j(s_j)$ be
+%%%%%     two points in two 3D curves, and define
+%%%%%     \begin{equation}
+%%%%%     S_{ij} \doteq \{v : \gama^{i,v}(s_i) \text{ and } \gama^{j,v}(s_j) \text{ share local support}\}.
+%%%%%     \end{equation}
+%%%%%     Then the a kernel function $\phi$ defines a consistency link between these two points,
+%%%%%     weighted by the extent of multiview image support $\phi_{ij}(s_i,s_j) \doteq
+%%%%%     |S_{ij}|$. When the curves are sampled, $\phi$ becomes an adjacency matrix of a
+%%%%%     graph representing links between individual curve samples.
+%%%%%     The implementation goes through each image edgel which votes for a 3D curve
+%%%%%     point that has received support from it (see the supplementary material for
+%%%%%     details).
+%%%%%     
+%%%%%     %\draftnote{cross check terminology w/ amir linking graphs}
+%%%%%     %\draftnote{parametrized alignment to write integrals}
+%%%%%     %\vspace{-0.3cm}
+%%%%%     \begin{figure}
+%%%%%     	%\captionsetup[subfigure]{labelformat=empty}
+%%%%%     	\centering
+%%%%%     	\begin{tabular}{cc}
+%%%%%     %    \vspace{-0.3cm}
+%%%%%     		\multirow{2}[2]{*}[20mm]{\includegraphics[width=0.75\linewidth]{figs/master-figure.png}} &
+%%%%%     		\includegraphics[width=0.2\linewidth]{figs/cluster32-2.png}\\
+%%%%%     		&
+%%%%%     		\includegraphics[width=0.2\linewidth]{figs/cluster32-corr2.png}
+%%%%%     	\end{tabular}
+%%%%%       \vspace{2em}
+%%%%%     	\caption{The four bottlenecks of
+%%%%%     		Fig.~\ref{fig:issues:remaining} are resolved by integration of
+%%%%%     		information/cues from all views. (a) The shared supporting edges, which are marked with circles, create the purple links between the corresponding samples of the 3D curves. These purple bonds will then be used to pull the redundant segments together and reorganize the 3D model into a clean 3D graph. Observe how the determination of common	image support can identify portions of the green and blue curves as identical	while differentiating the red one as distinct. A real example for a bundle of related curves is shown in (b) and the links among their edges in (c).
+%%%%%     	}
+%%%%%     	%   based on which 3D information with a
+%%%%%     	%   common cause can be integrated, leading to a four-stage process of $(i)$
+%%%%%     	%   establishing the links as pictured above, $(ii)$ identifying portions of 3D
+%%%%%     	%   curves which arise from the same source, Fig~\ref{fig:overlap:masks}, $(iii)$
+%%%%%     	%   precise localization for 3D curves with a common cause,
+%%%%%     	%   Fig~\ref{fig:graph:organization}a, (iv) Topological merging of these
+%%%%%     	%   segments, leading to a topological graph of 3D curve segments,
+%%%%%     	%   Fig~\ref{fig:graph:organization}e.}\label{fig:master:figure}
+%%%%%     \end{figure}
+%%%%%     
+%%%%%     %\vspace{-0.3cm}
+%%%%%     
+%%%%%     \textbf{Multiview Curve-level Consistency Network:}
+%%%%%     The identification of 3D edges sharing 2D edges leads to
+%%%%%     high recall operating point with many false links due to accidental alignment of
+%%%%%     edge support. False positives can be reduced without affecting high
+%%%%%     recall by employing a notion of curve context for each 3D edgel: a link
+%%%%%     between two 3D edgels based on a supporting 2D edgel is more effective if
+%%%%%     the respective neighbors of the underlying 3D edge on the underlying 3D curve
+%%%%%     are also linked. 
+%%%%%     
+%%%%%     The curve context idea requires establishing new pairwise links between 3D
+%%%%%     curves using MLN, when there are a sufficient number of links with
+%%%%%     $\phi_{ij}>\tau_{\epsilon}$ between their constituent 3D edges (in our
+%%%%%     implementation, $\tau_{\epsilon}=3$ and we require 5 such edges or more). The
+%%%%%     linking of 3D curves is represented by the Multiview Curve-level Consistency
+%%%%%     network (MCCN), a graph whose nodes are the 3D curves $\Gama_j$ and the edges
+%%%%%     represent the presence of high-weight 3D edge links between these 3D curves. The
+%%%%%     \mccn graph allows for a clustering of 3D curves by finding connected
+%%%%%     components; and once a link is established between two curves, there is a high
+%%%%%     likelihood of their edges corresponding in a regularized fashion, thus
+%%%%%     fewer common supporting 2D edges are required to establish a link between all
+%%%%%     their constituent 3D edges. This fact is used to perform gap filling, since even
+%%%%%     no edge support is acceptable to fill in small gaps and create a continuous and
+%%%%%     regularized correspondence if both neighbors of the gap are connected (see
+%%%%%     pseudocode in Supplementary Materials for details). The two stages in
+%%%%%     tandem, \ie, high recall linking of 3D edges and use of curve context to reduce
+%%%%%     false positives leads to high recall and high precision, \textit{i.e.}, all the
+%%%%%     3D edges which need to be related are related and very few outlier connections
+%%%%%     remain.
+%%%%%     
+%%%%%     \begin{figure}
+%%%%%     	\captionsetup[subfigure]{labelformat=empty}
+%%%%%     	\centering
+%%%%%     	\begin{tabular}{cc}
+%%%%%     		\multirow{2}[2]{*}[13mm]{\includegraphics[width=0.55\linewidth]{figs/need-for-clusters.png}} &
+%%%%%     		\includegraphics[width=0.45\linewidth]{figs/cluster7.png}\\
+%%%%%     		&
+%%%%%     		\includegraphics[width=0.45\linewidth]{figs/cluster7-corr.png}
+%%%%%     		\\
+%%%%%     	\end{tabular}
+%%%%%     	%\ReduceBeforeCaptionfigspace
+%%%%%     	\caption{\small 
+%%%%%     		The correspondence between 3D edge samples is skewed along a curve, a direct indication that these links cannot be used as-is when averaging and fusing redundant curve reconstructions. Instead, each point is assumed to be in correspondence with the point closest to it on another overlapping curve, during the iterative averaging step. Observe that corrections can be partial along related
+%%%%%     		curves.
+%%%%%     	}
+%%%%%     	\label{fig:overlap:masks}
+%%%%%     \end{figure}
 
 %\vspace{-0.3cm}
 
@@ -555,13 +605,13 @@ remain.
 
 %\vspace{-0.8cm}
 
-\subsection{Other objectives}
-\begin{itemize}
-\item Help with the book to be published
-\item Take part in helping teach a graduate-level course.
-\end{itemize}
+%\subsection{Other objectives}
+%\begin{itemize}
+%\item Help with the book to be published
+%\item Take part in helping teach a graduate-level course.
+%\end{itemize}
 
-\paragraph{Impact}
+%\paragraph{Impact}
 
 \section{Justificativa: as vantagens das curvas.}
 Além de possibilitarem as inúmeras aplicações do sistema proposto citadas no início da
@@ -614,7 +664,7 @@ Computer Vision), IEEE ICCV (International Conference in Computer Vision),  ACM
 SIGGRAPH, e o IEEE SIBIGRAPI.
 
 
-\section{Methodologia}
+\section{Metodologia}
 A execução do projeto será dividida nas seguintes frentes, visando atingir as
 metas descritas na seção anterior, na ordem descrita na próxima seção:
 \begin{itemize}
