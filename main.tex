@@ -333,7 +333,7 @@ fluidos).
 A linha de trabalhos mais práticos de Fabbri~\etal\ permite extrair um desenho
 3D e superfícies acopladas, representando objetos vistos por imagens. 
 As etapas desse sistema prático de reconstrução 3D são ilustradas na
-figura~\label{fig:lofting:pipeline}, sendo que nem todos os módulos ainda foram
+figura~\ref{fig:lofting:pipeline}, sendo que nem todos os módulos ainda foram
 publicados.
 De maneira resumida, uma vez que as posições de câmeras tenham sido calculadas,
 usando-se o trabalho desenvolvido por Fabbri junto ao aluno David de Pinho,
@@ -342,12 +342,12 @@ cada segmento de curva em uma imagem busca porções correspondentes de curvas em
 alguma outra imagem para assim hipotetizar um fragmento de curva 3D, hipótese
 esta que é confirmada ou refutada reprojetando-se em outras imagens. Esse
 processo resulta em um conjunto inicial desorganizado de fragmentos 3D
-denominado ``eboço 3D de
+denominado ``esboço 3D de
 curvas''~\cite{fabbri2011multiview,fabbri2016multiview},
 Figure~\ref{fig:lofting:pipeline} (\emph{3D curve sketch}). Neste estágio
 inicial de reconstrução, o esboço 3D de curvas sofre de erros de agrupamentos e
 fragmentações, além de redundância já que a informação ainda não foi integrada
-para diferentes pares de imagens, o que motivou Fabbri~\etal~\citet{usumezbas2016multiview}
+para diferentes pares de imagens, o que motivou Fabbri~\etal~\cite{usumezbas2016multiview}
 a explorar a conectividade topologica  para produzir um grafo conexo de
 curvas longas, denominado ``desenho 3D de curvas'', ver terceira linha na
 Figura~\ref{fig:lofting:pipeline}.
@@ -380,7 +380,7 @@ longa duração), foi produzido, pela primeira vez, um novo \emph{solver} para o
 problema de se determinar a posição relativa de três câmeras a partir de três
 imagens de curvas, Figura~\ref{fig:WW1}. Foi determinado que o problema é
 sobredeterminado, e ignorando-se uma tangente, o problema se reduz a um
-polinômio de grau 320~\cite{fabbri:arxiv}. Foi produzido um solver rápido e
+polinômio de grau 320~\cite{fabbri:arxiv:2019}. Foi produzido um solver rápido e
 determinístico com técnicas estado da arte de geometria algébrica numérica no
 rastreamento de soluções por continuação homotópica, resolvendo 11 variáveis de
 três câmeras (rotação e translação) na ordem de 600ms.  No entanto, diversas
@@ -752,11 +752,11 @@ industrial, ao mesmo tempo
 impondo menos restrições na aquisição. 
 
 
-\nocite{Fabbri:2002}
+%\nocite{Fabbri:2002}
 \addcontentsline{toc}{section}{Refer\^{e}ncias}
 \bibliographystyle{ieeetr}
-\bibliography{personal,strings,shading,multiview,motion,Kimia,catagorization,edge-linking,deformable,medical,graphics,active-contours,texture,imaging,tracking,shape-papers,bib-header,video,math-books,math,psych-books,metric,edge,leymarie_pami_scaffold,vision-books,vision,nn-search,multidimscaling,psychophysics,indexing,segmentation,image-databases,shape-matching,neuro,skeleton,skeleton2D,aspect-graphs,recognition,surface-networks,ridge,proceedings,perceptual-grouping,continuation,graph-matching-2,cooper}
-%\input{paper.bbl}
+%\bibliography{personal,strings,shading,multiview,motion,Kimia,catagorization,edge-linking,deformable,medical,graphics,active-contours,texture,imaging,tracking,shape-papers,bib-header,video,math-books,math,psych-books,metric,edge,leymarie_pami_scaffold,vision-books,vision,nn-search,multidimscaling,psychophysics,indexing,segmentation,image-databases,shape-matching,neuro,skeleton,skeleton2D,aspect-graphs,recognition,surface-networks,ridge,proceedings,perceptual-grouping,continuation,graph-matching-2,cooper}
+\bibliography{multiview,rf-multiview,Pajdla,ref}
 %
 % Assinaturas:
 %\newpage
